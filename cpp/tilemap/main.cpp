@@ -1,31 +1,25 @@
 #include <SFML/Graphics.hpp>
+#include "include/Tilemap.h"
 
-int main(int argc, char** argv) {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML");
+const unsigned int TILE_SIZE = 32;
+const unsigned int WIDTH_TILES_COUNT = 6;
+const unsigned int HEIGHT_TILES_COUNT = 5;
+const unsigned int WINDOW_WIDTH = WIDTH_TILES_COUNT * TILE_SIZE;
+const unsigned int WINDOW_HEIGHT = HEIGHT_TILES_COUNT * TILE_SIZE;
+
+int main() {
+    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tilemap");
     window.setFramerateLimit(60);
 
-    sf::Texture tiles;
-    if(!tiles.loadFromFile("assets/rpgtiles.png"))
-        throw std::runtime_error("Failed to load RPG tiles");
+    const int tiles[WIDTH_TILES_COUNT*HEIGHT_TILES_COUNT] = {
+              0,   1,   1,   2,  177, 193,
+             16,  17,  50,  18,  178, 209,
+             16,  50,  48,  34,  178, 163,
+             16,  66,  18, 177,  194, 163,
+             32,  33,  34, 178,  210, 163,
+    };
 
-    sf::VertexArray vertices(sf::Quads, 8);
-    vertices[0].position = sf::Vector2f(0.0f, 0.0f);
-    vertices[1].position = sf::Vector2f(200.0f, 0.0f);
-    vertices[2].position = sf::Vector2f(200.0f, 200.0f);
-    vertices[3].position = sf::Vector2f(0.0f, 200.0f);
-    vertices[0].texCoords = sf::Vector2f(160.0f, 288.0f);
-    vertices[1].texCoords = sf::Vector2f(192.0f, 288.0f);
-    vertices[2].texCoords = sf::Vector2f(192.0f, 320.0f);
-    vertices[3].texCoords = sf::Vector2f(160.0f, 320.0f);
-
-    vertices[4].position = sf::Vector2f(0.0f, 0.0f);
-    vertices[5].position = sf::Vector2f(200.0f, 0.0f);
-    vertices[6].position = sf::Vector2f(200.0f, 200.0f);
-    vertices[7].position = sf::Vector2f(0.0f, 200.0f);
-    vertices[4].texCoords = sf::Vector2f(480.0f, 128.0f);
-    vertices[5].texCoords = sf::Vector2f(512.0f, 128.0f);
-    vertices[6].texCoords = sf::Vector2f(512.0f, 160.0f);
-    vertices[7].texCoords = sf::Vector2f(480.0f, 160.0f);
+    tiles::Tilemap tilemap("assets/rpgtiles.png", TILE_SIZE, tiles, WIDTH_TILES_COUNT, HEIGHT_TILES_COUNT);
 
     while(window.isOpen()) {
         sf::Event event = {};
@@ -36,7 +30,7 @@ int main(int argc, char** argv) {
         }
 
         window.clear(sf::Color(51, 51, 51));
-        window.draw(vertices, &tiles);
+        window.draw(tilemap);
         window.display();
     }
 
