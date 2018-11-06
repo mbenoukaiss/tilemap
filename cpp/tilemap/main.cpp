@@ -19,7 +19,8 @@ int main() {
              32,  33,  34, 178,  210, 163,
     };
 
-    tiles::Tilemap tilemap("assets/rpgtiles.png", TILE_SIZE, tiles, WIDTH_TILES_COUNT, HEIGHT_TILES_COUNT);
+    tiles::Tilemap tilemap("assets/rpgtiles.png", TILE_SIZE);
+    tilemap.setTilemap(tiles, sf::Vector2u(WIDTH_TILES_COUNT, HEIGHT_TILES_COUNT));
 
     while(window.isOpen()) {
         sf::Event event = {};
@@ -27,6 +28,7 @@ int main() {
         while(window.pollEvent(event)) {
             if(event.type == sf::Event::Closed)
                 window.close();
+
         }
 
         window.clear(sf::Color(51, 51, 51));

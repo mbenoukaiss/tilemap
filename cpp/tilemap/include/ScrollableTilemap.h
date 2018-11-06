@@ -1,0 +1,12 @@
+#ifndef TILEMAP_SCROLLABLETILEMAP_H
+#define TILEMAP_SCROLLABLETILEMAP_H
+
+
+
+class ScrollableTilemap {
+
+};
+
+
+
+#endif //TILEMAP_SCROLLABLETILEMAP_H
