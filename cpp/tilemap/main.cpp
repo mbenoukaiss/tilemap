@@ -11,7 +11,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tilemap");
     window.setFramerateLimit(60);
 
-    const int tiles[WIDTH_TILES_COUNT*HEIGHT_TILES_COUNT] = {
+    std::vector<int> tiles = {
               0,   1,   1,   2,  177, 193,
              16,  17,  50,  18,  178, 209,
              16,  50,  48,  34,  178, 163,
@@ -20,7 +20,7 @@ int main() {
     };
 
     tiles::Tilemap tilemap("assets/rpgtiles.png", TILE_SIZE);
-    tilemap.setTilemap(tiles, sf::Vector2u(WIDTH_TILES_COUNT, HEIGHT_TILES_COUNT));
+    tilemap.setTilemap(tiles.data(), sf::Vector2u(WIDTH_TILES_COUNT, HEIGHT_TILES_COUNT));
 
     while(window.isOpen()) {
         sf::Event event = {};
@@ -30,7 +30,7 @@ int main() {
                 window.close();
 
         }
-
+        
         window.clear(sf::Color(51, 51, 51));
         window.draw(tilemap);
         window.display();

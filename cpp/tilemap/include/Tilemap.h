@@ -5,7 +5,7 @@
 
 namespace tiles {
 
-class Tilemap : public sf::Drawable, public sf::Transformable {
+class Tilemap : public sf::Drawable {
 
     public:
     Tilemap();
@@ -15,10 +15,11 @@ class Tilemap : public sf::Drawable, public sf::Transformable {
     void setTilemap(const int* tiles, const sf::Vector2u& tilesCount);
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-    private:
+    protected:
     sf::Texture m_texture;
     unsigned int m_tileSize;
-    sf::VertexArray m_vertices;
+    std::vector<int> m_map;
+    sf::Vector2u m_mapSize;
 
 };
 
