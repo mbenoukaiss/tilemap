@@ -68,8 +68,8 @@ void tiles::Tilemap::draw(sf::RenderTarget& target, sf::RenderStates states) con
     unsigned int startX = (int) m_origin.x / m_tileSize;
     unsigned int startY = (int) m_origin.y / m_tileSize;
 
-    unsigned int verticalTilesCount = (m_size.y + m_origin.y) / 32 + 1;
-    unsigned int horizontalTilesCount = (m_size.x + m_origin.x) / 32 + 1;
+    unsigned int horizontalTilesCount = startX + m_mapSize.x + 1;
+    unsigned int verticalTilesCount = startY + m_mapSize.y + 1;
 
     if(m_mapSize.y < verticalTilesCount)
         verticalTilesCount = m_mapSize.y;
@@ -82,7 +82,7 @@ void tiles::Tilemap::draw(sf::RenderTarget& target, sf::RenderStates states) con
             unsigned int index = i + j * m_mapSize.x;
             int x = i * m_tileSize - (unsigned int) m_origin.x;
             int y = j * m_tileSize - (unsigned int) m_origin.y;
-            unsigned int tilesetX = (m_map[index] % (m_texture.getSize().x / m_tileSize)) * m_tileSize;
+            unsigned int tilesetX = m_map[index] * m_tileSize % m_texture.getSize().x;
             unsigned int tilesetY = (m_map[index] / (m_texture.getSize().y / m_tileSize)) * m_tileSize;
 
             index *= 4;
