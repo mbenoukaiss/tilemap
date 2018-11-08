@@ -4,8 +4,8 @@
 const unsigned int TILE_SIZE = 32;
 const unsigned int WIDTH_TILES_COUNT = 6;
 const unsigned int HEIGHT_TILES_COUNT = 5;
-const unsigned int WINDOW_WIDTH = WIDTH_TILES_COUNT * TILE_SIZE;
-const unsigned int WINDOW_HEIGHT = HEIGHT_TILES_COUNT * TILE_SIZE;
+const unsigned int WINDOW_WIDTH = 96;
+const unsigned int WINDOW_HEIGHT = 96;
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tilemap");
@@ -19,8 +19,8 @@ int main() {
              32,  33,  34, 178,  210, 163,
     };
 
-    tiles::Tilemap tilemap("assets/rpgtiles.png", TILE_SIZE);
-    tilemap.setTilemap(tiles.data(), sf::Vector2u(WIDTH_TILES_COUNT, HEIGHT_TILES_COUNT));
+    tiles::Tilemap map("assets/rpgtiles.png", TILE_SIZE, sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT), sf::Vector2f(0, 0));
+    map.setTilemap(tiles.data(), sf::Vector2u(WIDTH_TILES_COUNT, HEIGHT_TILES_COUNT));
 
     while(window.isOpen()) {
         sf::Event event = {};
@@ -28,11 +28,28 @@ int main() {
         while(window.pollEvent(event)) {
             if(event.type == sf::Event::Closed)
                 window.close();
+            else if(event.type == sf::Event::KeyPressed) {
+                switch(event.key.code) {
+                    case sf::Keyboard::Up:
+                        map.translate(0, -2);
+                        break;
+                    case sf::Keyboard::Right:
+                        map.translate(2, 0);
+                        break;
+                    case sf::Keyboard::Down:
+                        map.translate(0, 2);
+                        break;
+                    case sf::Keyboard::Left:
+                        map.translate(-2, 0);
+                        break;
+                    default: break;
+                }
+            }
 
         }
         
         window.clear(sf::Color(51, 51, 51));
-        window.draw(tilemap);
+        window.draw(map);
         window.display();
     }
 
