@@ -15,6 +15,14 @@ tiles::Tilemap::Tilemap(const std::string& tileset, unsigned int tileSize,
     loadTileset(tileset, tileSize);
 }
 
+Tilemap::~Tilemap() {
+    std::vector<int*>::iterator it;
+
+    for(it = m_layers.begin(); it != m_layers.end(); ++it) {
+        delete *it;
+    }
+}
+
 void tiles::Tilemap::translate(sf::Vector2f offset) {
     translate(offset.x, offset.y);
 }
@@ -50,13 +58,19 @@ void Tilemap::loadTileset(const std::string& tileset, unsigned int tileSize) {
         throw std::runtime_error("Failed to load tiles from " + tileset);
 }
 
-void Tilemap::setTilemap(const int* tiles, const sf::Vector2u& tilesCount) {
-    m_map.resize(tilesCount.x * tilesCount.y);
-    for(size_t i = 0; i < m_map.size(); ++i) {
-        m_map[i] = tiles[i];
+void Tilemap::setTilemapSize(const sf::Vector2u& tilesCount) {
+    m_mapSize = tilesCount;
+}
+
+void Tilemap::addLayer(const int* tiles) {
+    size_t map_size = m_mapSize.x * m_mapSize.y;
+    auto map = (int*) std::calloc(map_size, sizeof(int));
+
+    for(size_t i = 0; i < map_size; ++i) {
+        map[i] = tiles[i];
     }
 
-    m_mapSize = tilesCount;
+    m_layers.push_back(map);
 }
 
 void tiles::Tilemap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -76,43 +90,45 @@ void tiles::Tilemap::draw(sf::RenderTarget& target, sf::RenderStates states) con
     if(m_mapSize.x < horizontalTilesCount)
         horizontalTilesCount = m_mapSize.x;
 
-    for(unsigned int j = startY; j < verticalTilesCount; ++j) {
-        for(unsigned int i = startX; i < horizontalTilesCount; ++i) {
+    for(size_t layer = 0; layer < m_layers.size(); ++layer) {
+        for(unsigned int j = startY; j < verticalTilesCount; ++j) {
+            for(unsigned int i = startX; i < horizontalTilesCount; ++i) {
 
-            unsigned int index = i + j * m_mapSize.x;
-            int x = i * m_tileSize - (unsigned int) m_origin.x;
-            int y = j * m_tileSize - (unsigned int) m_origin.y;
-            unsigned int tilesetX = m_map[index] * m_tileSize % m_texture.getSize().x;
-            unsigned int tilesetY = (m_map[index] / (m_texture.getSize().y / m_tileSize)) * m_tileSize;
+                unsigned int index = i + j * m_mapSize.x;
+                int x = i * m_tileSize - (unsigned int) m_origin.x;
+                int y = j * m_tileSize - (unsigned int) m_origin.y;
+                unsigned int tilesetX = m_layers[layer][index] * m_tileSize % m_texture.getSize().x;
+                unsigned int tilesetY = (m_layers[layer][index] / (m_texture.getSize().y / m_tileSize)) * m_tileSize;
 
-            index *= 4;
+                index *= 4;
 
-            vertices[index].position =   sf::Vector2f(x, y);
-            vertices[index+1].position = sf::Vector2f(x + m_tileSize, y);
-            vertices[index+2].position = sf::Vector2f(x + m_tileSize, y + m_tileSize);
-            vertices[index+3].position = sf::Vector2f(x, y + m_tileSize);
-            vertices[index].texCoords =   sf::Vector2f(tilesetX, tilesetY);
-            vertices[index+1].texCoords = sf::Vector2f(tilesetX + m_tileSize, tilesetY);
-            vertices[index+2].texCoords = sf::Vector2f(tilesetX + m_tileSize, tilesetY + m_tileSize);
-            vertices[index+3].texCoords = sf::Vector2f(tilesetX, tilesetY + m_tileSize);
+                vertices[index].position = sf::Vector2f(x, y);
+                vertices[index + 1].position = sf::Vector2f(x + m_tileSize, y);
+                vertices[index + 2].position = sf::Vector2f(x + m_tileSize, y + m_tileSize);
+                vertices[index + 3].position = sf::Vector2f(x, y + m_tileSize);
+                vertices[index].texCoords = sf::Vector2f(tilesetX, tilesetY);
+                vertices[index + 1].texCoords = sf::Vector2f(tilesetX + m_tileSize, tilesetY);
+                vertices[index + 2].texCoords = sf::Vector2f(tilesetX + m_tileSize, tilesetY + m_tileSize);
+                vertices[index + 3].texCoords = sf::Vector2f(tilesetX, tilesetY + m_tileSize);
 
-            for(size_t k = 0; k < 4; ++k) {
-                sf::Vertex& vertex = vertices[index + k];
+                for(size_t k = 0; k < 4; ++k) {
+                    sf::Vertex& vertex = vertices[index + k];
 
-                if(vertex.position.x < 0) {
-                    vertex.texCoords.x -= vertex.position.x;
-                    vertex.position.x = 0;
-                } else if(vertex.position.x > m_size.x) {
-                    vertex.texCoords.x -= vertex.position.x - m_size.x;
-                    vertex.position.x = m_size.x;
-                }
+                    if(vertex.position.x < 0) {
+                        vertex.texCoords.x -= vertex.position.x;
+                        vertex.position.x = 0;
+                    } else if(vertex.position.x > m_size.x) {
+                        vertex.texCoords.x -= vertex.position.x - m_size.x;
+                        vertex.position.x = m_size.x;
+                    }
 
-                if(vertex.position.y < 0) {
-                    vertex.texCoords.y -= vertex.position.y;
-                    vertex.position.y = 0;
-                } else if(vertex.position.y > m_size.y) {
-                    vertex.texCoords.y -= vertex.position.y - m_size.y;
-                    vertex.position.y = m_size.y;
+                    if(vertex.position.y < 0) {
+                        vertex.texCoords.y -= vertex.position.y;
+                        vertex.position.y = 0;
+                    } else if(vertex.position.y > m_size.y) {
+                        vertex.texCoords.y -= vertex.position.y - m_size.y;
+                        vertex.position.y = m_size.y;
+                    }
                 }
             }
         }

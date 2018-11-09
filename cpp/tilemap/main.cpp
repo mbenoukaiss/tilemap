@@ -25,7 +25,9 @@ int main() {
     };
 
     tiles::Tilemap map("assets/rpgtiles.png", TILE_SIZE, sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT), sf::Vector2f(0, 0));
-    map.setTilemap(tiles.data(), sf::Vector2u(WIDTH_TILES_COUNT, HEIGHT_TILES_COUNT));
+    map.setTilemapSize(sf::Vector2u(WIDTH_TILES_COUNT, HEIGHT_TILES_COUNT));
+    //map.setLayerCount(1);
+    map.addLayer(tiles.data());
 
     while(window.isOpen()) {
         sf::Event event = {};
