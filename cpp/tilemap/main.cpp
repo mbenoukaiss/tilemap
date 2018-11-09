@@ -2,8 +2,8 @@
 #include "include/Tilemap.h"
 
 const unsigned int TILE_SIZE = 32;
-const unsigned int WIDTH_TILES_COUNT = 6;
-const unsigned int HEIGHT_TILES_COUNT = 5;
+const unsigned int WIDTH_TILES_COUNT = 14;
+const unsigned int HEIGHT_TILES_COUNT = 10;
 const unsigned int WINDOW_WIDTH = 96;
 const unsigned int WINDOW_HEIGHT = 96;
 
@@ -12,11 +12,16 @@ int main() {
     window.setFramerateLimit(60);
 
     std::vector<int> tiles = {
-              0,   1,   1,   2,  177, 193,
-             16,  17,  50,  18,  178, 209,
-             16,  50,  48,  34,  178, 163,
-             16,  66,  18, 177,  194, 163,
-             32,  33,  34, 178,  210, 163,
+            163, 163, 160, 161, 161, 161, 161, 161, 161, 162, 163, 163, 163, 163,
+            163, 163, 176,   0,   1,   1,   2, 177, 193, 194, 163, 163, 163, 163,
+            163, 160, 177,  16,  17,  50,  18, 178, 209, 210, 163, 163, 163, 163,
+            163, 176, 177,  16,  50,  48,  34, 178, 163, 163, 163, 163, 163, 163,
+            163, 192, 177,  16,  66,  18, 177, 194, 163, 163, 163, 163, 163, 163,
+            163, 208, 176,  32,  33,  34, 178, 210, 163, 163, 163, 163, 163, 163,
+            163, 163, 192, 193, 193, 193, 194, 163, 163, 163, 163, 163, 163, 163,
+            163, 163, 208, 209, 209, 209, 210, 163, 163, 163, 163, 163, 163, 163,
+            163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163,
+            163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163
     };
 
     tiles::Tilemap map("assets/rpgtiles.png", TILE_SIZE, sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT), sf::Vector2f(0, 0));
