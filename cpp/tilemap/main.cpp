@@ -11,23 +11,40 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tilemap");
     window.setFramerateLimit(60);
 
-    std::vector<int> tiles = {
-            163, 163, 160, 161, 161, 161, 161, 161, 161, 162, 163, 163, 163, 163,
-            163, 163, 176,   0,   1,   1,   2, 177, 193, 194, 163, 163, 163, 163,
-            163, 160, 177,  16,  17,  50,  18, 178, 209, 210, 163, 163, 163, 163,
-            163, 176, 177,  16,  50,  48,  34, 178, 163, 163, 163, 163, 163, 163,
-            163, 192, 177,  16,  66,  18, 177, 194, 163, 163, 163, 163, 163, 163,
-            163, 208, 176,  32,  33,  34, 178, 210, 163, 163, 163, 163, 163, 163,
-            163, 163, 192, 193, 193, 193, 194, 163, 163, 163, 163, 163, 163, 163,
-            163, 163, 208, 209, 209, 209, 210, 163, 163, 163, 163, 163, 163, 163,
-            163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163,
-            163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163
-    };
+    auto rpgtiles = std::make_shared<tiles::Tileset>("assets/rpgtiles.png", TILE_SIZE);
 
-    tiles::Tilemap map("assets/rpgtiles.png", TILE_SIZE, sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT), sf::Vector2f(0, 0));
+    auto background = tiles::LayerBuilder()
+            .setTileset(rpgtiles)
+            .setTiles({
+                163, 163, 160, 161, 161, 161, 161, 161, 161, 162, 163, 163, 163, 163,
+                163, 163, 176,   0,   1,   1,   2, 177, 193, 194, 163, 163, 163, 163,
+                163, 160, 177,  16,  17,  50,  18, 178, 209, 210, 163, 163, 163, 163,
+                163, 176, 177,  16,  50,  48,  34, 178, 163, 163, 163, 163, 163, 163,
+                163, 192, 177,  16,  66,  18, 177, 194, 163, 163, 163, 163, 163, 163,
+                163, 208, 176,  32,  33,  34, 178, 210, 163, 163, 163, 163, 163, 163,
+                163, 163, 192, 193, 193, 193, 194, 163, 163, 163, 163, 163, 163, 163,
+                163, 163, 208, 209, 209, 209, 210, 163, 163, 163, 163, 163, 163, 163,
+                163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163,
+                163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163
+            })
+            .setSize(WIDTH_TILES_COUNT, HEIGHT_TILES_COUNT)
+            .setOffset(0, 0)
+            .build();
+
+    auto boat = tiles::LayerBuilder()
+            .setTileset(rpgtiles)
+            .setTiles({
+                224, 225, 226, 227,
+                240, 241, 242, 243,
+            })
+            .setSize(4, 2)
+            .setOffset(8 * TILE_SIZE, 7 * TILE_SIZE)
+            .build();
+
+    tiles::Tilemap map(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT));
     map.setTilemapSize(sf::Vector2u(WIDTH_TILES_COUNT, HEIGHT_TILES_COUNT));
-    //map.setLayerCount(1);
-    map.addLayer(tiles.data());
+    map.addLayer(*background);
+    map.addLayer(*boat);
 
     while(window.isOpen()) {
         sf::Event event = {};
@@ -54,7 +71,7 @@ int main() {
             }
 
         }
-        
+
         window.clear(sf::Color(51, 51, 51));
         window.draw(map);
         window.display();
