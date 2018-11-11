@@ -8,9 +8,7 @@ tiles::Tilemap::Tilemap(sf::Vector2u size, sf::Vector2f origin) :
 
 }
 
-Tilemap::~Tilemap() {
-
-}
+Tilemap::~Tilemap() = default;
 
 void tiles::Tilemap::translate(sf::Vector2f offset) {
     translate(offset.x, offset.y);
