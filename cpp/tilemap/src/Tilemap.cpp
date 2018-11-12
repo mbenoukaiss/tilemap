@@ -10,46 +10,46 @@ tiles::Tilemap::Tilemap(sf::Vector2u size, sf::Vector2f origin) :
 
 Tilemap::~Tilemap() = default;
 
-void tiles::Tilemap::translate(sf::Vector2f offset) {
+void tiles::Tilemap::translate(sf::Vector2f& offset) {
     translate(offset.x, offset.y);
-}
-
-void tiles::Tilemap::resize(sf::Vector2u size) {
-    m_size = size;
 }
 
 void Tilemap::translate(float ox, float oy) {
     if(m_origin.x + ox < 0)
         m_origin.x = 0;
-    else if(m_origin.x + m_size.x + ox > m_mapSize.x * m_tileSize)
-        m_origin.x = m_mapSize.x * m_tileSize - m_size.x;
+    else if(m_origin.x + m_size.x + ox > m_bounds.width)
+        m_origin.x = m_bounds.width - m_size.x;
     else
         m_origin.x += ox;
 
     if(m_origin.y + oy < 0)
         m_origin.y = 0;
-    else if(m_origin.y + m_size.y + oy > m_mapSize.y * m_tileSize)
-        m_origin.y = m_mapSize.y * m_tileSize - m_size.y;
+    else if(m_origin.y + m_size.y + oy > m_bounds.height)
+        m_origin.y = m_bounds.height - m_size.y;
     else
         m_origin.y += oy;
 }
 
+void tiles::Tilemap::resize(sf::Vector2u& size) {
+    resize(size.x, size.y);
+}
+
 void Tilemap::resize(unsigned int width, unsigned int height) {
-    m_size = sf::Vector2u(width, height);
-}
-
-void Tilemap::loadTileset(const std::string& tileset, unsigned int tileSize) {
-    m_tileSize = tileSize;
-
-    if(!m_texture.loadFromFile(tileset))
-        throw std::runtime_error("Failed to load tiles from " + tileset);
-}
-
-void Tilemap::setTilemapSize(const sf::Vector2u& tilesCount) {
-    m_mapSize = tilesCount;
+    m_size.x = width;
+    m_size.y = height;
 }
 
 void Tilemap::addLayer(const Layer& layer) {
+    if(layer.offset().x < m_bounds.left)
+        m_bounds.left = layer.offset().x;
+    if(layer.offset().x + layer.size().x > m_bounds.width)
+        m_bounds.width = layer.offset().x + layer.size().x;
+
+    if(layer.offset().y < m_bounds.top)
+        m_bounds.top = layer.offset().y;
+    if(layer.offset().y + layer.size().y > m_bounds.height)
+        m_bounds.height = layer.offset().y + layer.size().y;
+    
     m_layers.emplace_back(layer);
 }
 

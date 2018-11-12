@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include <cmath>
 #include "Tileset.h"
 
 namespace tiles {

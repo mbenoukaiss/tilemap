@@ -27,7 +27,7 @@ int main() {
                 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163,
                 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163, 163
             })
-            .setSize(WIDTH_TILES_COUNT, HEIGHT_TILES_COUNT)
+            .setSize(WIDTH_TILES_COUNT * TILE_SIZE, HEIGHT_TILES_COUNT * TILE_SIZE)
             .setOffset(0, 0)
             .build();
 
@@ -37,12 +37,11 @@ int main() {
                 224, 225, 226, 227,
                 240, 241, 242, 243,
             })
-            .setSize(4, 2)
+            .setSize(4 * TILE_SIZE, 2 * TILE_SIZE)
             .setOffset(8 * TILE_SIZE, 7 * TILE_SIZE)
             .build();
 
     tiles::Tilemap map(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT));
-    map.setTilemapSize(sf::Vector2u(WIDTH_TILES_COUNT, HEIGHT_TILES_COUNT));
     map.addLayer(*background);
     map.addLayer(*boat);
 

@@ -45,7 +45,7 @@ const sf::Vector2f& Layer::offset() const {
 }
 
 void Layer::copyTiles(int* tiles) {
-    size_t tiles_count = m_size->x * m_size->y;
+    size_t tiles_count = (m_size->x * m_size->y) / m_tileset->tileSize();
     m_tiles = (int*) std::malloc(tiles_count * sizeof(int));
 
     std::copy(tiles, tiles + tiles_count, m_tiles);
@@ -71,13 +71,16 @@ void Layer::draw(sf::RenderTarget& target, sf::RenderStates states) const {
     states.texture = m_tileset->texture();
     states.transform.translate(*m_offset);
 
-    size_t vertices_count = m_size->x * m_size->y * 4;
+    auto verticalTilesCount = (unsigned int) std::ceil((float) m_size->y / m_tileset->tileSize());
+    auto horizontalTilesCount = (unsigned int) std::ceil((float) m_size->x / m_tileset->tileSize());
+
+    size_t vertices_count = verticalTilesCount * horizontalTilesCount * 4;
     sf::VertexArray vertices(sf::Quads, vertices_count);
 
-    for(unsigned int j = 0; j < m_size->y; ++j) {
-        for(unsigned int i = 0; i < m_size->x; ++i) {
+    for(unsigned int j = 0; j < verticalTilesCount; ++j) {
+        for(unsigned int i = 0; i < horizontalTilesCount; ++i) {
 
-            unsigned int index = i + j * m_size->x;
+            unsigned int index = i + j * horizontalTilesCount;
             if(m_tiles[index] < 0) // negative number means no tile
                 continue;
 

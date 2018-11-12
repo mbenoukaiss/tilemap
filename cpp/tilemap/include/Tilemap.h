@@ -31,14 +31,7 @@ class Tilemap : public sf::Drawable {
      *
      * \param offset Offset
      */
-    void translate(sf::Vector2f offset);
-
-    /*!
-     * \brief Resizes the tilemap
-     *
-     * \param size Size
-     */
-    void resize(sf::Vector2u size);
+    void translate(sf::Vector2f& offset);
 
     /*!
      * \brief Changes the origin by a given offset.
@@ -52,11 +45,14 @@ class Tilemap : public sf::Drawable {
      *
      * \param size Size
      */
+    void resize(sf::Vector2u& size);
+
+    /*!
+     * \brief Resizes the tilemap
+     *
+     * \param size Size
+     */
     void resize(unsigned int width, unsigned int height);
-
-    void loadTileset(const std::string& tileset, unsigned int tileSize);
-
-    void setTilemapSize(const sf::Vector2u& tilesCount);
 
     /*!
      * \brief Adds a layer to the tilemap
@@ -82,7 +78,7 @@ class Tilemap : public sf::Drawable {
     unsigned int m_tileSize;
 
     std::vector<Layer> m_layers;
-    sf::Vector2u m_mapSize;
+    sf::FloatRect m_bounds;
 
     sf::Vector2u m_size;
     sf::Vector2f m_origin;
