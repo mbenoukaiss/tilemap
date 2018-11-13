@@ -13,46 +13,14 @@ class Tilemap : public sf::Drawable {
 
     public:
     /*!
-     * \brief Constructs a tilemap of the given size.
-     *
-     * \param size The size of the tilemap in pixels
-     * \param origin The origin of the tilemap, which is the
-     * first pixel drawn in the top left corner of the tilemap
+     * \brief Constructs an empty tilemap.
      */
-    explicit Tilemap(sf::Vector2u size, sf::Vector2f origin = sf::Vector2f(0.0f, 0.0f));
+    explicit Tilemap();
 
     /*!
      * \brief Destructor
      */
     ~Tilemap() override;
-
-    /*!
-     * \brief Changes the origin by a given offset.
-     *
-     * \param offset Offset
-     */
-    void translate(sf::Vector2f& offset);
-
-    /*!
-     * \brief Changes the origin by a given offset.
-     *
-     * \param offset Offset
-     */
-    void translate(float ox, float oy);
-
-    /*!
-     * \brief Resizes the tilemap
-     *
-     * \param size Size
-     */
-    void resize(sf::Vector2u& size);
-
-    /*!
-     * \brief Resizes the tilemap
-     *
-     * \param size Size
-     */
-    void resize(unsigned int width, unsigned int height);
 
     /*!
      * \brief Adds a layer to the tilemap
@@ -74,14 +42,8 @@ class Tilemap : public sf::Drawable {
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
     protected:
-    sf::Texture m_texture;
-    unsigned int m_tileSize;
-
     std::vector<Layer> m_layers;
     sf::FloatRect m_bounds;
-
-    sf::Vector2u m_size;
-    sf::Vector2f m_origin;
 
 };
 

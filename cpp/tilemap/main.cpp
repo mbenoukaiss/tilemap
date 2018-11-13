@@ -10,6 +10,7 @@ const unsigned int WINDOW_HEIGHT = 96;
 int main() {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tilemap");
     window.setFramerateLimit(60);
+    window.setView(sf::View(sf::FloatRect(0, 0, 96, 96)));
 
     auto rpgtiles = std::make_shared<tiles::Tileset>("assets/rpgtiles.png", TILE_SIZE);
 
@@ -41,7 +42,7 @@ int main() {
             .setOffset(8 * TILE_SIZE, 7 * TILE_SIZE)
             .build();
 
-    tiles::Tilemap map(sf::Vector2u(WINDOW_WIDTH, WINDOW_HEIGHT));
+    tiles::Tilemap map;
     map.addLayer(*background);
     map.addLayer(*boat);
 
@@ -52,21 +53,25 @@ int main() {
             if(event.type == sf::Event::Closed)
                 window.close();
             else if(event.type == sf::Event::KeyPressed) {
+                sf::View view = window.getView();
+
                 switch(event.key.code) {
                     case sf::Keyboard::Up:
-                        map.translate(0, -2);
+                        view.setCenter(view.getCenter().x, view.getCenter().y - 2);
                         break;
                     case sf::Keyboard::Right:
-                        map.translate(2, 0);
+                        view.setCenter(view.getCenter().x + 2, view.getCenter().y);
                         break;
                     case sf::Keyboard::Down:
-                        map.translate(0, 2);
+                        view.setCenter(view.getCenter().x, view.getCenter().y + 2);
                         break;
                     case sf::Keyboard::Left:
-                        map.translate(-2, 0);
+                        view.setCenter(view.getCenter().x - 2, view.getCenter().y);
                         break;
                     default: break;
                 }
+
+                window.setView(view);
             }
 
         }
