@@ -7,6 +7,8 @@ const unsigned int HEIGHT_TILES_COUNT = 10;
 const unsigned int WINDOW_WIDTH = 96;
 const unsigned int WINDOW_HEIGHT = 96;
 
+void updateView(sf::View& view, sf::Keyboard::Key key, const sf::FloatRect* boundaries);
+
 int main() {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tilemap");
     window.setFramerateLimit(60);
@@ -53,25 +55,10 @@ int main() {
             if(event.type == sf::Event::Closed)
                 window.close();
             else if(event.type == sf::Event::KeyPressed) {
-                sf::View view = window.getView();
+                sf::View wv = window.getView();
+                updateView(wv, event.key.code, &map.boundaries());
 
-                switch(event.key.code) {
-                    case sf::Keyboard::Up:
-                        view.setCenter(view.getCenter().x, view.getCenter().y - 2);
-                        break;
-                    case sf::Keyboard::Right:
-                        view.setCenter(view.getCenter().x + 2, view.getCenter().y);
-                        break;
-                    case sf::Keyboard::Down:
-                        view.setCenter(view.getCenter().x, view.getCenter().y + 2);
-                        break;
-                    case sf::Keyboard::Left:
-                        view.setCenter(view.getCenter().x - 2, view.getCenter().y);
-                        break;
-                    default: break;
-                }
-
-                window.setView(view);
+                window.setView(wv);
             }
 
         }
@@ -82,4 +69,44 @@ int main() {
     }
 
     return 0;
+}
+
+void updateView(sf::View& view, const sf::Keyboard::Key key, const sf::FloatRect* boundaries = nullptr) {
+    switch(key) {
+        case sf::Keyboard::Up:
+            view.setCenter(view.getCenter().x, view.getCenter().y - 2);
+            break;
+        case sf::Keyboard::Right:
+            view.setCenter(view.getCenter().x + 2, view.getCenter().y);
+            break;
+        case sf::Keyboard::Down:
+            view.setCenter(view.getCenter().x, view.getCenter().y + 2);
+            break;
+        case sf::Keyboard::Left:
+            view.setCenter(view.getCenter().x - 2, view.getCenter().y);
+            break;
+        default: break;
+    }
+
+    //Update the view to fit the boundaries
+    if(boundaries != nullptr) {
+        sf::Vector2f center_offset = view.getSize() / 2.0f;
+        sf::FloatRect drawn(view.getCenter() - center_offset, view.getSize());
+
+        if(drawn.left + view.getSize().x > boundaries->width) {
+            drawn.left = boundaries->width - view.getSize().x;
+        }
+        if(drawn.left < 0) {
+            drawn.left = 0;
+        }
+
+        if(drawn.top + view.getSize().y > boundaries->height) {
+            drawn.top = boundaries->height - view.getSize().y;
+        }
+        if(drawn.top < 0) {
+            drawn.top = 0;
+        }
+
+        view.setCenter(drawn.left + center_offset.x, drawn.top + center_offset.y);
+    }
 }

@@ -28,6 +28,13 @@ class Tilemap : public sf::Drawable {
      * The layer will be added on top of all the other
      * existing layers. Only a copy of the layer will
      * be kept by the tilemap.
+     * If the layer exceeds the current boundaries
+     * (set by previous layers), boundaries will be
+     * updated to include the new layer, which means
+     * adding a layer that is outside the background
+     * boundaries will allow to "scroll" outside of the
+     * tilemap (until the limits of the new layer are
+     * reached).
      *
      * \param layer Layer
      */
@@ -36,14 +43,28 @@ class Tilemap : public sf::Drawable {
     /*!
      * \brief Draws the tilemap to a render target
      *
+     * The SFML view object provided with the target
+     * will get updated in order to fit in the tilemap
+     * and forbide "scrolling" out of it.
+     *
      * \param target Render target to draw to
      * \param states Render states
      */
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+    /*!
+     * \brief Get the boundaries of the tilemap
+     *
+     * Boundaries represent smallest area which contains
+     * all of the different layer's tiles.
+     *
+     * \return Boundaries
+     */
+    const sf::FloatRect& boundaries() const;
+
     protected:
     std::vector<Layer> m_layers;
-    sf::FloatRect m_bounds;
+    sf::FloatRect m_boundaries;
 
 };
 
