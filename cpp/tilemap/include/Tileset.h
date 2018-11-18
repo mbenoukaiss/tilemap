@@ -5,6 +5,9 @@
 
 namespace tiles {
 
+/*!
+ * \brief Holds information about tileset
+ */
 class Tileset {
 
     public:
@@ -28,7 +31,7 @@ class Tileset {
     Tileset(const std::string& tileset, unsigned int tileSize);
 
     /*!
-     * \brief Destructor
+     * \brief Destructor.
      */
     virtual ~Tileset();
 

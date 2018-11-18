@@ -6,6 +6,7 @@ Layer::Layer(const Layer& other) :
         m_tileset(other.m_tileset),
         m_size(other.m_size),
         m_offset(other.m_offset) {
+
     copyTiles(other.m_tiles);
 }
 
@@ -53,8 +54,8 @@ void Layer::copyTiles(int* tiles) {
 
 Layer& Layer::operator=(const Layer& other) {
     m_tileset = other.m_tileset;
-    m_size = other.m_size;
-    m_offset = other.m_offset;
+    m_size = new sf::Vector2u(*other.m_size);
+    m_offset = new sf::Vector2f(*other.m_offset);
 
     copyTiles(other.m_tiles);
 
@@ -63,6 +64,17 @@ Layer& Layer::operator=(const Layer& other) {
 
 Layer& Layer::operator=(Layer&& other) noexcept {
     m_tileset = std::move(other.m_tileset);
+
+    m_tiles = other.m_tiles;
+    other.m_tiles = nullptr;
+
+    m_size = other.m_size;
+    other.m_size = nullptr;
+
+    m_offset = other.m_offset;
+    other.m_offset = nullptr;
+
+    return *this;
 }
 
 Layer::Layer() = default;

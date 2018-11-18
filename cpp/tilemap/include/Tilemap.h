@@ -13,17 +13,17 @@ class Tilemap : public sf::Drawable {
 
     public:
     /*!
-     * \brief Constructs an empty tilemap.
+     * \brief Default constructor.
      */
-    explicit Tilemap();
+    Tilemap();
 
     /*!
-     * \brief Destructor
+     * \brief Destructor.
      */
     ~Tilemap() override;
 
     /*!
-     * \brief Adds a layer to the tilemap
+     * \brief Adds a layer to the tilemap.
      *
      * The layer will be added on top of all the other
      * existing layers. Only a copy of the layer will
@@ -41,11 +41,7 @@ class Tilemap : public sf::Drawable {
     void addLayer(const Layer& layer);
 
     /*!
-     * \brief Draws the tilemap to a render target
-     *
-     * The SFML view object provided with the target
-     * will get updated in order to fit in the tilemap
-     * and forbide "scrolling" out of it.
+     * \brief Draws the tilemap to a render target.
      *
      * \param target Render target to draw to
      * \param states Render states
@@ -53,7 +49,7 @@ class Tilemap : public sf::Drawable {
     void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
     /*!
-     * \brief Get the boundaries of the tilemap
+     * \brief Get the boundaries of the tilemap.
      *
      * Boundaries represent smallest area which contains
      * all of the different layer's tiles.
