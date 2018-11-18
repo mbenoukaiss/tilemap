@@ -17,13 +17,19 @@ void Tilemap::addLayer(const Layer& layer) {
         m_boundaries.top = layer.offset().y;
     if(layer.offset().y + layer.size().y > m_boundaries.height)
         m_boundaries.height = layer.offset().y + layer.size().y;
-    
+
     m_layers.emplace_back(layer);
 }
 
 void tiles::Tilemap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+    sf::FloatRect visible(
+            target.getView().getCenter() - target.getView().getSize() / 2.0f,
+            target.getView().getSize()
+    );
+
     for(auto& layer : m_layers) {
-        target.draw(layer, states); //TODO: test if it'll be inside the window before drawing
+        if(visible.intersects(sf::FloatRect(layer.offset(), (sf::Vector2f) layer.size())))
+            target.draw(layer, states);
     }
 }
 
