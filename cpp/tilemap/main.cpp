@@ -85,6 +85,12 @@ void updateView(sf::View& view, const sf::Keyboard::Key key, const sf::FloatRect
         case sf::Keyboard::Left:
             view.setCenter(view.getCenter().x - 2, view.getCenter().y);
             break;
+        case sf::Keyboard::P:
+            view.zoom(0.9);
+            break;
+        case sf::Keyboard::M:
+            view.zoom(1.1);
+            break;
         default: break;
     }
 
