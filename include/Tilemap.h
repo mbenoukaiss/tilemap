@@ -23,6 +23,14 @@ class Tilemap : public sf::Drawable {
     ~Tilemap() override;
 
     /*!
+     * \brief Retieves a layer by its name
+     *
+     * \param name Name
+     * \return Corresponding layer
+     */
+    Layer& layer(std::string name);
+
+    /*!
      * \brief Adds a layer to the tilemap.
      *
      * The layer will be added on top of all the other
@@ -38,7 +46,7 @@ class Tilemap : public sf::Drawable {
      *
      * \param layer Layer
      */
-    void addLayer(const Layer& layer);
+    void addLayer(std::string name, const Layer& layer);
 
     /*!
      * \brief Draws the tilemap to a render target.
@@ -59,7 +67,7 @@ class Tilemap : public sf::Drawable {
     const sf::FloatRect& boundaries() const;
 
     protected:
-    std::vector<Layer> m_layers;
+    std::map<std::string, Layer> m_layers;
     sf::FloatRect m_boundaries;
 
 };

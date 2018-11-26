@@ -7,7 +7,7 @@ const unsigned int HEIGHT_TILES_COUNT = 10;
 const unsigned int WINDOW_WIDTH = 96;
 const unsigned int WINDOW_HEIGHT = 96;
 
-void updateView(sf::View& view, sf::Keyboard::Key key, const sf::FloatRect* boundaries);
+void updateView(tiles::Tilemap& map, sf::View& view, sf::Keyboard::Key key);
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Tilemap");
@@ -45,8 +45,8 @@ int main() {
             .build();
 
     tiles::Tilemap map;
-    map.addLayer(*background);
-    map.addLayer(*boat);
+    map.addLayer("background", *background);
+    map.addLayer("boat", *boat);
 
     while(window.isOpen()) {
         sf::Event event = {};
@@ -56,7 +56,7 @@ int main() {
                 window.close();
             else if(event.type == sf::Event::KeyPressed) {
                 sf::View wv = window.getView();
-                updateView(wv, event.key.code, &map.boundaries());
+                updateView(map, wv, event.key.code);
 
                 window.setView(wv);
             }
@@ -71,7 +71,7 @@ int main() {
     return 0;
 }
 
-void updateView(sf::View& view, const sf::Keyboard::Key key, const sf::FloatRect* boundaries = nullptr) {
+void updateView(tiles::Tilemap& map, sf::View& view, const sf::Keyboard::Key key) {
     switch(key) {
         case sf::Keyboard::Up:
             view.setCenter(view.getCenter().x, view.getCenter().y - 2);
@@ -95,24 +95,22 @@ void updateView(sf::View& view, const sf::Keyboard::Key key, const sf::FloatRect
     }
 
     //Update the view to fit the boundaries
-    if(boundaries != nullptr) {
-        sf::Vector2f center_offset = view.getSize() / 2.0f;
-        sf::FloatRect drawn(view.getCenter() - center_offset, view.getSize());
+    sf::Vector2f center_offset = view.getSize() / 2.0f;
+    sf::FloatRect drawn(view.getCenter() - center_offset, view.getSize());
 
-        if(drawn.left + view.getSize().x > boundaries->width) {
-            drawn.left = boundaries->width - view.getSize().x;
-        }
-        if(drawn.left < 0) {
-            drawn.left = 0;
-        }
-
-        if(drawn.top + view.getSize().y > boundaries->height) {
-            drawn.top = boundaries->height - view.getSize().y;
-        }
-        if(drawn.top < 0) {
-            drawn.top = 0;
-        }
-
-        view.setCenter(drawn.left + center_offset.x, drawn.top + center_offset.y);
+    if(drawn.left + view.getSize().x > map.boundaries().width) {
+        drawn.left = map.boundaries().width - view.getSize().x;
     }
+    if(drawn.left < 0) {
+        drawn.left = 0;
+    }
+
+    if(drawn.top + view.getSize().y > map.boundaries().height) {
+        drawn.top = map.boundaries().height - view.getSize().y;
+    }
+    if(drawn.top < 0) {
+        drawn.top = 0;
+    }
+
+    view.setCenter(drawn.left + center_offset.x, drawn.top + center_offset.y);
 }

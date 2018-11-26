@@ -7,7 +7,11 @@ tiles::Tilemap::Tilemap() = default;
 
 Tilemap::~Tilemap() = default;
 
-void Tilemap::addLayer(const Layer& layer) {
+Layer& Tilemap::layer(std::string name) {
+    return m_layers.at(name);
+}
+
+void Tilemap::addLayer(const std::string name, const Layer& layer) {
     if(layer.offset().x < m_boundaries.left)
         m_boundaries.left = layer.offset().x;
     if(layer.offset().x + layer.size().x > m_boundaries.width)
@@ -18,7 +22,7 @@ void Tilemap::addLayer(const Layer& layer) {
     if(layer.offset().y + layer.size().y > m_boundaries.height)
         m_boundaries.height = layer.offset().y + layer.size().y;
 
-    m_layers.emplace_back(layer);
+    m_layers.emplace(std::pair<std::string, Layer>(name, layer));
 }
 
 void tiles::Tilemap::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -27,9 +31,9 @@ void tiles::Tilemap::draw(sf::RenderTarget& target, sf::RenderStates states) con
             target.getView().getSize()
     );
 
-    for(auto& layer : m_layers) {
-        if(visible.intersects(sf::FloatRect(layer.offset(), (sf::Vector2f) layer.size())))
-            target.draw(layer, states);
+    for(auto& pair : m_layers) {
+        if(visible.intersects(sf::FloatRect(pair.second.offset(), (sf::Vector2f) pair.second.size())))
+            target.draw(pair.second, states);
     }
 }
 
